@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -pedantic -std=c17
+CFLAGS=-Wall -pedantic -std=c11
 OBJ=bstring.o
 BIN=bstringtest
 

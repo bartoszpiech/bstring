@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "bstring.h"
 
@@ -25,13 +26,11 @@ void print_s(char *a) {
 			default: fabs)(X)
 
 int main() {
-	bstring_t my_string = bstring_new("siemanko");
-	printf("%d\n", my_string->size);
+	bstring my_string = bstring_new("siemankoss");
+	bstring my_string2 = bstring_new("elos");
+	my_string = bstring_cat(my_string, my_string2);
+	printf("%d\n%s\n", bstring_count(my_string, 's'), my_string->data);
+	printf("%s", my_string2->data);
 	bstring_delete(my_string);
-	//printf("%d\n", my_string == NULL ? 1 : 0);
-	/*
-	bstring_t my_string = bstring("siema");
-	printf("[%s;%d]\n", my_string->data, my_string->size);
-	bstring_free(my_string);
-	*/
+	bstring_delete(my_string2);
 }

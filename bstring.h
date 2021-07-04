@@ -7,7 +7,7 @@ extern "C" {
 
 typedef struct {
 	char *data;
-	int size;
+	int len;
 } bstring_t, *bstring;
 
 /* init -- destroy */
@@ -16,6 +16,13 @@ int bstring_init(bstring str, const char *text);
 bstring bstring_new(const char *text);
 void bstring_destroy(bstring str);
 void bstring_delete(bstring str);
+
+bstring bstring_copy(bstring str);
+bstring bstring_cat(bstring str1, bstring str2);
+
+int bstring_find(bstring str, const char *text);
+int bstring_count(bstring str, const char ch);
+
 
 #ifdef __cplusplus
 }
