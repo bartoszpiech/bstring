@@ -54,11 +54,9 @@ bstring bstring_cat(bstring str1, bstring str2) {
 	result->len = str1->len + str2->len;
 	result->data = malloc(result->len);
 	for (int i = 0; i < str1->len; i++) {
-		printf("copying %c\n", str1->data[i]);
 		result->data[i] = str1->data[i];
 	}
 	for (int i = str1->len; i < result->len; i++) {
-		printf("copying %c\n", str2->data[i - str1->len]);
 		result->data[i] = str2->data[i - str1->len];
 	}
 	return result;

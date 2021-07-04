@@ -30,15 +30,11 @@ void bstring_print(bstring str) {
 }
 
 int main() {
-	bstring my_string = bstring_new("ssiemanko");
-	printf("[%d]", my_string->len);
+	bstring my_string = bstring_new("ssiemanko\n");
 	bstring my_string2 = bstring_new("elo");
-	printf("[%d]", my_string2->len);
 	bstring sum = bstring_cat(my_string, my_string2);
-	//printf("[%d]", sum->len);
-	//printf("%d\n%s\n", bstring_count(my_string, 's'), my_string->data);
-	//bstring_print(sum);
-	bstring_delete(sum);
+	bstring_print(sum);
 	bstring_delete(my_string);
+	bstring_delete(sum);
 	bstring_delete(my_string2);
 }
