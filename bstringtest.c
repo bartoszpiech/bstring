@@ -30,11 +30,8 @@ void bstring_print(bstring str) {
 }
 
 int main() {
-	bstring my_string = bstring_new("ssiemanko\n");
-	bstring my_string2 = bstring_new("elo");
-	bstring sum = bstring_cat(my_string, my_string2);
-	bstring_print(sum);
+	bstring my_string = bstring_new("MUO-");
+	bstring_mul(my_string, 5);
+	bstring_print(my_string);
 	bstring_delete(my_string);
-	bstring_delete(sum);
-	bstring_delete(my_string2);
 }

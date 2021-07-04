@@ -8,6 +8,7 @@
 /* NOT OK */
 /* strcpy strncpy strcat strncat */
 
+
 int bstring_init(bstring str, const char *text) {
 	str->len= 0;
 	for (int i = 0; text[i] != 0; i++) {
@@ -21,6 +22,7 @@ int bstring_init(bstring str, const char *text) {
 	}
 	return 0;
 }
+
 bstring bstring_new(const char *text) {
 	bstring str;
 	if ((str = malloc(sizeof(bstring_t))) == NULL) {
@@ -28,7 +30,7 @@ bstring bstring_new(const char *text) {
 		exit(1);
 	}
 	if (bstring_init(str, text)) {
-		fprintf(stderr, "Error: could not allocate space for bstring\n");
+		fprintf(stderr, "Error: could not allocate space for bstring data\n");
 		exit(1);
 	}
 	return str;
@@ -50,6 +52,17 @@ bstring bstring_copy(bstring str) {
 */
 
 bstring bstring_cat(bstring str1, bstring str2) {
+	int tmp = str1->len;
+	str1->len += str2->len;
+	str1->data = realloc(str1->data, str1->len);
+	for (int i = 0; i < str2->len; i++) {
+		str1->data[i + tmp] = str2->data[i];
+	}
+	return str1;
+}
+
+/*
+bstring bstring_cat(bstring str1, bstring str2) {
 	bstring result = malloc(sizeof(bstring_t));
 	result->len = str1->len + str2->len;
 	result->data = malloc(result->len);
@@ -60,6 +73,16 @@ bstring bstring_cat(bstring str1, bstring str2) {
 		result->data[i] = str2->data[i - str1->len];
 	}
 	return result;
+}
+*/
+
+bstring bstring_mul(bstring str, int times) {
+	bstring helper = bstring_new(str->data);
+	for (int i = 0; i < times - 1; i++) {
+		bstring_cat(str, helper);
+	}
+	bstring_delete(helper);
+	return str;
 }
 
 int bstring_find(bstring str, const char *text) {

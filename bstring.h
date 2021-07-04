@@ -19,6 +19,7 @@ void bstring_delete(bstring str);
 
 bstring bstring_copy(bstring str);
 bstring bstring_cat(bstring str1, bstring str2);
+bstring bstring_mul(bstring str, int times);
 
 int bstring_find(bstring str, const char *text);
 int bstring_count(bstring str, const char ch);
