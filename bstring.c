@@ -43,15 +43,22 @@ void bstring_delete(bstring str) {
 	free(str);
 }
 
+/*
 bstring bstring_copy(bstring str) {
 	return bstring_new(str->data);
 }
+*/
 
 bstring bstring_cat(bstring str1, bstring str2) {
-	bstring result = bstring_copy(str1);
-	result->len += str2->len;
-	result->data = realloc(result->data, result->len);
+	bstring result = malloc(sizeof(bstring_t));
+	result->len = str1->len + str2->len;
+	result->data = malloc(result->len);
+	for (int i = 0; i < str1->len; i++) {
+		printf("copying %c\n", str1->data[i]);
+		result->data[i] = str1->data[i];
+	}
 	for (int i = str1->len; i < result->len; i++) {
+		printf("copying %c\n", str2->data[i - str1->len]);
 		result->data[i] = str2->data[i - str1->len];
 	}
 	return result;
