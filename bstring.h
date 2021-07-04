@@ -8,10 +8,14 @@ extern "C" {
 typedef struct {
 	char *data;
 	int size;
-} *bstring_t;
+} bstring_t, *bstring;
 
-bstring_t bstring(const char *text);
-void bstring_free(bstring_t str);
+/* init -- destroy */
+/* new -- delete */
+int bstring_init(bstring str, const char *text);
+bstring bstring_new(const char *text);
+void bstring_destroy(bstring str);
+void bstring_delete(bstring str);
 
 #ifdef __cplusplus
 }

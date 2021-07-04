@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "bstring.h"
@@ -7,20 +8,35 @@
 /* NOT OK */
 /* strcpy strncpy strcat strncat */
 
-bstring_t bstring(const char *text) {
-	bstring_t result = malloc(sizeof(bstring_t));
-	result->size = 0;
+int bstring_init(bstring str, const char *text) {
+	str->size = 0;
 	for (int i = 0; text[i] != 0; i++) {
-		result->size++;
+		str->size++;
 	}
-	result->data = malloc(result->size);
-	for (int i = 0; i < result->size; i++) {
-		result->data[i] = text[i];
+	if ((str->data = malloc(str->size)) == NULL) {
+		fprintf(stderr, "Error: could not allocate space for bstring\n");
+		exit(1);
 	}
-	return result;
+	for (int i = 0; i < str->size; i++) {
+		str->data[i] = text[i];
+	}
+	return 0;
+}
+bstring_t bstring_new(const char *text) {
+	bstring str;
+	if ((str = malloc(sizeof(bstring_t))) == NULL) {
+		fprintf(stderr, "Error: could not allocate space for bstring\n");
+		exit(1);
+	}
+	bstring_init(str, text);
+	return str;
 }
 
-void bstring_free(bstring_t str) {
+void bstring_destroy(bstring str) {
 	free(str->data);
+}
+
+void bstring_delete(bstring str) {
+	bstring_destroy(str);
 	free(str);
 }
