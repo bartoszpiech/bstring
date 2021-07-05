@@ -70,7 +70,7 @@ bstring_t *bstring_catb(bstring_t *str1, const bstring_t *str2) {
 bstring_t *bstring_cats(bstring_t *str1, const char *str2) {
 	int str1_len = str1->len;
 	int str2_len = 0;
-	while (str2[str2_len] != 0) {
+	while (str2[str2_len] != 0) { // MEMLEAK THREAT
 		str2_len++;
 	}
 	str1->len += str2_len;
@@ -92,7 +92,7 @@ bstring_t *bstring_mul(bstring_t *str, const int times) {
 
 int bstring_find(const bstring_t *str, const char *text) {
 	int text_len = 0;
-	for (int i = 0; text[i] != 0; i++) {
+	for (int i = 0; text[i] != 0; i++) { // MEMLEAK THREAT
 		text_len++;
 	}
 	for (int i = 0; i < str->len; i++) {
@@ -133,13 +133,26 @@ bstring_t *bstring_slice(bstring_t *str, int beg, int end) {
 
 bstring_t *bstring_replace(bstring_t *str,
 		const char *oldval, const char *newval) {
-	bstring_t *helper = bstring_copyb(str);
-	int index = bstring_find(helper, oldval);
+	bstring_t *first = bstring_copyb(str);
+	bstring_t *second = bstring_copyb(str);
+
+	int begin_index = bstring_find(first, oldval);
+	int end_index = begin_index;
+	while (oldval[end_index - begin_index] != 0) { // MEMLEAK THREAT
+		end_index++;
+	}
+	bstring_slice(first, 0, begin_index);
+	bstring_slice(second, end_index, -1);
+	bstring_copys(str, first->data, first->len);
+	bstring_cats(str, newval);
+	bstring_catb(str, second);
+	bstring_delete(first);
+	bstring_delete(second);
 	return str;
 }
 	
 
 void bstring_print(const bstring_t *str) {
-	printf("[%d - \"%.*s\"]", str->len, str->len, str->data);
+	printf("[%d - \"%.*s\"]\n", str->len, str->len, str->data);
 	//printf("[%d - \"%s\"]\n", str->len, str->data);
 }
