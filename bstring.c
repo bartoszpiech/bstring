@@ -43,39 +43,48 @@ void bstring_delete(bstring_t *str) {
 	free(str);
 }
 
-bstring_t *bstring_copy(bstring_t *str) {
+void bstring_replaces(bstring_t *str, const char *text, const int len) {
+	bstring_destroy(str);
+	bstring_init(str, text, len);
+	if (bstring_init(str, text, len)) {
+		fprintf(stderr, "Error: could not allocate space for bstring data\n");
+		exit(1);
+	}
+}
+
+bstring_t *bstring_copy(const bstring_t *str) {
 	return bstring_new(str->data, str->len);
 }
 
-bstring_t *bstring_cat(bstring_t *str1, bstring_t *str2) {
-	int tmp = str1->len;
+bstring_t *bstring_catb(bstring_t *str1, const bstring_t *str2) {
+	int str1_len = str1->len;
+	int str2_len = str2->len;
 	str1->len += str2->len;
 	str1->data = realloc(str1->data, str1->len);
-	for (int i = 0; i < str2->len; i++) {
-		str1->data[i + tmp] = str2->data[i];
+	for (int i = 0; i < str2_len; i++) {
+		str1->data[i + str1_len] = str2->data[i];
 	}
 	return str1;
 }
 
-/*
-bstring bstring_cat(bstring str1, bstring str2) {
-	bstring result = malloc(sizeof(bstring_t));
-	result->len = str1->len + str2->len;
-	result->data = malloc(result->len);
-	for (int i = 0; i < str1->len; i++) {
-		result->data[i] = str1->data[i];
+bstring_t *bstring_cats(bstring_t *str1, const char *str2) {
+	int str1_len = str1->len;
+	int str2_len = 0;
+	while (str2[str2_len] != 0) {
+		str2_len++;
 	}
-	for (int i = str1->len; i < result->len; i++) {
-		result->data[i] = str2->data[i - str1->len];
+	str1->len += str2_len;
+	str1->data = realloc(str1->data, str1->len);
+	for (int i = 0; i < str2_len; i++) {
+		str1->data[i + str1_len] = str2[i];
 	}
-	return result;
+	return str1;
 }
-*/
 
-bstring_t *bstring_mul(bstring_t *str, int times) {
+bstring_t *bstring_mul(bstring_t *str, const int times) {
 	bstring_t *helper = bstring_copy(str);
 	for (int i = 0; i < times - 1; i++) {
-		bstring_cat(str, helper);
+		bstring_catb(str, helper);
 	}
 	bstring_delete(helper);
 	return str;
@@ -108,6 +117,29 @@ int bstring_count(const bstring_t *str, const char ch) {
 	return count;
 }
 
+bstring_t *bstring_slice(bstring_t *str, int beg, int end) {
+	if (end == -1) {
+		end = str->len;
+	}
+	int cap = end - beg;
+	bstring_t *helper = bstring_new(" ", cap);
+	for (int i = beg; i < end; i++) {
+		helper->data[i-beg] = str->data[i];
+	}
+	bstring_replaces(str, helper->data, helper->len);
+	bstring_delete(helper);
+	return str;
+}
+
+bstring_t *bstring_replace(bstring_t *str,
+		const char *oldval, const char *newval) {
+	bstring_t *helper = bstring_copy(str);
+	int index = bstring_find(helper, oldval);
+	return str;
+}
+	
+
 void bstring_print(const bstring_t *str) {
-	printf("[%d - %.*s]", str->len, str->len, str->data);
+	//printf("[%d - %.*s]", str->len, str->len, str->data);
+	printf("[%d - \"%s\"]\n", str->len, str->data);
 }
