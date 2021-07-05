@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #include "bstring.h"
 /* OK */
@@ -9,11 +10,8 @@
 /* strcpy strncpy strcat strncat */
 
 
-int bstring_init(bstring str, const char *text) {
-	str->len= 0;
-	for (int i = 0; text[i] != 0; i++) {
-		str->len++;
-	}
+int bstring_init(bstring_t *str, const char *text, const int len) {
+	str->len = len;
 	if ((str->data = malloc(str->len)) == NULL) {
 		return 1;
 	}
@@ -23,35 +21,33 @@ int bstring_init(bstring str, const char *text) {
 	return 0;
 }
 
-bstring bstring_new(const char *text) {
-	bstring str;
+bstring_t *bstring_new(const char *text, const int len) {
+	bstring_t *str;
 	if ((str = malloc(sizeof(bstring_t))) == NULL) {
 		fprintf(stderr, "Error: could not allocate space for bstring\n");
 		exit(1);
 	}
-	if (bstring_init(str, text)) {
+	if (bstring_init(str, text, len)) {
 		fprintf(stderr, "Error: could not allocate space for bstring data\n");
 		exit(1);
 	}
 	return str;
 }
 
-void bstring_destroy(bstring str) {
+void bstring_destroy(bstring_t *str) {
 	free(str->data);
 }
 
-void bstring_delete(bstring str) {
+void bstring_delete(bstring_t *str) {
 	bstring_destroy(str);
 	free(str);
 }
 
-/*
-bstring bstring_copy(bstring str) {
-	return bstring_new(str->data);
+bstring_t *bstring_copy(bstring_t *str) {
+	return bstring_new(str->data, str->len);
 }
-*/
 
-bstring bstring_cat(bstring str1, bstring str2) {
+bstring_t *bstring_cat(bstring_t *str1, bstring_t *str2) {
 	int tmp = str1->len;
 	str1->len += str2->len;
 	str1->data = realloc(str1->data, str1->len);
@@ -76,8 +72,8 @@ bstring bstring_cat(bstring str1, bstring str2) {
 }
 */
 
-bstring bstring_mul(bstring str, int times) {
-	bstring helper = bstring_new(str->data);
+bstring_t *bstring_mul(bstring_t *str, int times) {
+	bstring_t *helper = bstring_copy(str);
 	for (int i = 0; i < times - 1; i++) {
 		bstring_cat(str, helper);
 	}
@@ -85,7 +81,7 @@ bstring bstring_mul(bstring str, int times) {
 	return str;
 }
 
-int bstring_find(bstring str, const char *text) {
+int bstring_find(const bstring_t *str, const char *text) {
 	int text_len = 0;
 	for (int i = 0; text[i] != 0; i++) {
 		text_len++;
@@ -102,7 +98,7 @@ int bstring_find(bstring str, const char *text) {
 	return -1;
 }
 
-int bstring_count(bstring str, const char ch) {
+int bstring_count(const bstring_t *str, const char ch) {
 	int count = 0;
 	for (int i = 0; i < str->len; i++) {
 		if (str->data[i] == ch) {
@@ -110,4 +106,8 @@ int bstring_count(bstring str, const char ch) {
 		}
 	}
 	return count;
+}
+
+void bstring_print(const bstring_t *str) {
+	printf("[%d - %.*s]", str->len, str->len, str->data);
 }
