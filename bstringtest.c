@@ -7,7 +7,7 @@ blist_t *bstring_split(bstring_t *str, const char *divider) {
 	while (divider[div_len] != 0) {
 		div_len++;
 	}
-	blist_t *list = blist_new();
+	blist_t *list = blist_new((void (*)(void *))bstring_delete);
 	bstring_t *helper = bstring_copyb(str);
 	for (int div_index = bstring_find(helper, divider);
 			div_index != -1;
@@ -23,13 +23,9 @@ blist_t *bstring_split(bstring_t *str, const char *divider) {
 int main() {
 	bstring_t *my_string = bstring_new("raz\ndwa\ntrzy", 12);
 	bstring_print(my_string);
-	bstring_print(my_string);
 	blist_t *list = bstring_split(my_string, "\n");
 	blist_foreach(list) {
 		bstring_print((bstring_t*)iterator->value);
-	}
-	blist_foreach(list) {
-		bstring_delete((bstring_t*)iterator->value);
 	}
 	bstring_delete(my_string);
 	blist_delete(list);
