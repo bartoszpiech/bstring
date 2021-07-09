@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -pedantic -std=c11
-OBJ=bstring.o
+OBJ=bstring.o blist.o
 BIN=bstringtest
 
 all: $(BIN)
